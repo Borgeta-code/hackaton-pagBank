@@ -59,11 +59,11 @@ export function FullScreenModal({ visible, onClose, updatePermission }: Props) {
     <Modal transparent visible={visible} animationType="slide">
       <View className='flex-1 bg-white justify-center items-center'>
         {!showOpenFinanceConfirm || showCongratulations ? (
-          <Pressable onPress={handleClose} className='absolute top-4 left-4 z-30'>
+          <Pressable onPress={handleClose} className='absolute top-8 left-4 z-30'>
             <X size={32} color={showCongratulations ? '#0078AD' : '#000'} />
           </Pressable>
         ) : (
-          <Pressable onPress={handleClose} className='absolute top-4 left-4 z-30'>
+          <Pressable onPress={handleClose} className='absolute top-8 left-4 z-30'>
             <ArrowLeft size={32} color='#0078AD' />
           </Pressable>
         )}
@@ -96,7 +96,7 @@ export function FullScreenModal({ visible, onClose, updatePermission }: Props) {
               <Text className="text-lg">Dados de investimento</Text>
               <ChevronDown size={24} color={'#0078AD'} />
             </View>
-            <View className='flex-1 pt-12'>
+            <View className='flex-1 absolute bottom-0 pb-10'>
               <Button variant='secondary' title='Cadastrar no Open Finance' isLoading={isLoading} onPress={handleOpenFinanceConfirm} />
               <Text className="text-base text-center pt-3">Ao continuar você declara estar de acordo com os</Text>
               <Text className="text-base text-center text-pagbank-blue">Termos e Condições do Open Finance</Text>
@@ -134,7 +134,7 @@ export function FullScreenModal({ visible, onClose, updatePermission }: Props) {
                 <Ilustration2 width={300} height={300} style={{ marginTop: 20 }} />
                 <Text className="text-2xl text-center -mt-10">Aproveite e comece a fazer</Text>
                 <Text className="text-2xl text-center pb-4">parte do futuro!</Text>
-                <Text className="text-lg text-center text-zinc-500 px-6">
+                <Text className="text-lg text-center text-zinc-500 px-6 pb-8">
                   Identificamos algumas contas que você pode trazer para o PagBank:
                 </Text>
 
@@ -154,7 +154,7 @@ export function FullScreenModal({ visible, onClose, updatePermission }: Props) {
               </View>
             </Swiper>
 
-            <View className='w-full py-4 px-2'>
+            <View className='w-full py-4 pb-8 px-2'>
               <Button variant='secondary' title='Continuar' onPress={handleContinue} />
             </View>
           </>

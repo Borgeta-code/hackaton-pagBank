@@ -1,7 +1,7 @@
 import Button from "@components/button";
 import { ChevronDown, ChevronRight, CircleHelp } from "lucide-react-native";
 import React, { useCallback, useEffect, useState } from "react";
-import { FlatList, Image, ScrollView, Text, View } from "react-native";
+import { FlatList, Image, Platform, ScrollView, Text, View } from "react-native";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import Checkbox from 'expo-checkbox';
 import chart from '@assets/chart.png'
@@ -11,11 +11,17 @@ import AvatarItau from "@assets/avatar-itau.svg"
 import { FullScreenModal } from "@components/fullscreenModal";
 import { storagePermissionGet, storagePermissionRemove, storagePermissionSave } from "@storage/storagePermission";
 import Swiper from "react-native-swiper";
+import Avatar from "@assets/avatar.svg"
+import { Bell, EyeOff, Lock, LockKeyhole } from "lucide-react-native";
+
 
 export function Home() {
 
   const [score, setScore] = useState(840);
   const scoreColor = score <= 400 ? '#FF4D4D' : score <= 600 ? '#FFD700' : '#3CB371';
+  const scoreMessage = score <= 400 ? 'Sua conta está ruim' : score <= 600 ? 'Sua conta está regular' : 'Sua vida financeira está saudável!';
+  const scoreSubtitle = score <= 400 ? 'Sua saúde financeira está enfrentando' : score <= 600 ? 'Sua saúde financeira não está ruim,' : 'Sua saúde financeira está ótima!';
+  const scoreSubtitle2 = score <= 400 ? 'problemas! Confira abaixo como melhorar.' : score <= 600 ? 'mas sabemos como melhorar!' : 'Que tal investir no seu futuro?';
 
   const [balance, setBalance] = useState('4.550,00');
   const [toReceive, setToReceive] = useState('3.000,00');
@@ -25,17 +31,17 @@ export function Home() {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState('Todos');
 
-  const [itemLightColor, setItemLightColor] = useState('#E8B81C');
-  const [itemMediumColor, setItemMediumColor] = useState('#D4A017');
-  const [itemDarkColor, setItemDarkColor] = useState('#A67C00');
+  const [itemLightColor, setItemLightColor] = useState('#FFD13A');
+  const [itemMediumColor, setItemMediumColor] = useState('#E8B81C');
+  const [itemDarkColor, setItemDarkColor] = useState('#8C7324');
 
   const openModal = () => setModalVisible(true);
   const closeModal = () => setModalVisible(false);
 
   async function getPermission() {
     try {
-      const permission = await storagePermissionGet();
-      setPermission(permission);
+      const permission = await storagePermissionRemove() // storagePermissionGet();
+      //setPermission(permission);
     } catch (e) {
       console.log(e);
     }
@@ -74,6 +80,7 @@ export function Home() {
       setScore(590);
       setItemLightColor('#FF8800');
       setItemMediumColor('#0760C0');
+      setItemDarkColor('#0760C0');
     } else {
       setBalance('4.550,00');
       setToReceive('3.000,00');
@@ -158,7 +165,18 @@ export function Home() {
 
   return (
     <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 80 }}>
-      <View className="flex-1 px-4 py-2 border-b" style={{backgroundColor: itemLightColor, borderColor: itemMediumColor}}>
+      <View className="w-full flex-row justify-between items-center px-6 py-4 border-b" style={{paddingTop: Platform.OS === "android" ? 36 : 12, backgroundColor: itemLightColor, borderColor: itemMediumColor}}>
+        <View className="flex-row justify-center items-center gap-2 p-2 pr-10 border rounded-full" style={{backgroundColor: itemDarkColor, borderColor: itemMediumColor}}>
+            <Avatar width={32} height={32} /> 
+            <Text className="text-lg font-medium" style={{ color: (selectedItem === 'Todos' || selectedItem === 'PagBank') ? '#000' : '#fff'}}>Olá, Julia</Text>
+        </View>
+        <View className="flex-row justify-center items-center gap-5">
+          <LockKeyhole size={20} color='#000' />
+          <Bell size={20} color='#000' />
+          <EyeOff size={20} color='#000' />
+        </View>
+      </View>
+      <View className="flex-1 px-4 py-4 border-b" style={{backgroundColor: itemLightColor, borderColor: itemMediumColor}}>
         {
           permission && (
             <FlatList
@@ -175,8 +193,14 @@ export function Home() {
                 <View
                   className="flex-row justify-center items-center gap-2 px-4 py-2 bg-white rounded-full"
                   style={[
-                    item.title === selectedItem && { backgroundColor: '#0078AD' },
-                  ]}
+                    { backgroundColor: '#fff' },
+                    item.title === selectedItem 
+                      ? (selectedItem === 'Todos' || selectedItem === 'PagBank' 
+                          ? { backgroundColor: '#0078AD' } 
+                          : { backgroundColor: itemMediumColor }
+                        )
+                      : {}
+                  ]}                          
                   onTouchEnd={() => handleSelection(item.title)}
                 >
                   {item.hasAvatar && item.avatar && <item.avatar width={24} height={24} />}
@@ -193,10 +217,10 @@ export function Home() {
             />
           )
         }
-        <Text className="text-lg">Saldo</Text>
-        <Text className="text-3xl font-semibold py-1">R$ {balance}</Text>
+        <Text className="text-lg text-white" style={{ color: (selectedItem === 'Todos' || selectedItem === 'PagBank') ? '#000' : '#fff'}}>Saldo</Text>
+        <Text className="text-3xl font-semibold py-1 text-white" style={{ color: (selectedItem === 'Todos' || selectedItem === 'PagBank') ? '#000' : '#fff'}}>R$ {balance}</Text>
       </View>
-      <View className="flex-1 gap-5 px-4 py-5 bg-pagbank-yellow-light border-b border-pagbank-yellow-medium" style={[permission && { paddingBottom: 36, borderBottomLeftRadius: 20, borderBottomRightRadius: 20, zIndex: 999, borderColor: 'transparent' }]}>
+      <View className="flex-1 gap-5 px-4 py-5 border-b bg-pagbank-yellow-light border-pagbank-yellow-medium" style={[permission && { paddingBottom: 36, borderBottomLeftRadius: 20, borderBottomRightRadius: 20, zIndex: 999, borderColor: 'transparent'}]}>
         {
           selectedItem === 'Todos' &&
           <View className="flex-1 flex-row justify-between items-center">
@@ -207,9 +231,9 @@ export function Home() {
             <Button title="Antecipar" />
           </View>
         }
-        <View className="flex-1 flex-row justify-between items-center rounded-full px-4 py-2 border-2 border-pagbank-yellow-dark">
-          <Text className="text-base font-medium">Extrato da conta</Text>
-          <ChevronRight size={24} color={'#000'} />
+        <View className="flex-1 flex-row justify-between items-center rounded-full px-4 py-3" style={{backgroundColor: itemDarkColor }}>
+          <Text className="text-base font-medium text-white">Extrato da conta</Text>
+          <ChevronRight size={24} color={'#fff'} />
         </View>
       </View>
       {
@@ -224,7 +248,7 @@ export function Home() {
         )
       }
       <View className="flex gap-3 px-3 py-6 pt-10 items-center justify-center bg-white rounded-b-3xl border border-t-0 border-zinc-300 -mt-4">
-        <Text className="text-2xl font-medium pb-4">Sua conta está saudável!</Text>
+        <Text className="text-2xl font-medium pb-4">{scoreMessage}</Text>
         <AnimatedCircularProgress
           size={180}
           width={22}
@@ -245,8 +269,8 @@ export function Home() {
           )}
         </AnimatedCircularProgress>
         <View className="flex justify-center items-center pt-3">
-          <Text className="text-lg">Sua saúde financeira está ótima!</Text>
-          <Text className="text-lg">Que tal investir no seu futuro?</Text>
+          <Text className="text-lg">{scoreSubtitle}</Text>
+          <Text className="text-lg">{scoreSubtitle2}</Text>
         </View>
       </View>
       {showCards.length > 0 && (

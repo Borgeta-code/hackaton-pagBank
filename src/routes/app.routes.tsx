@@ -9,22 +9,26 @@ import { HeaderSignIn } from "@components/headerSignIn";
 import { HomeIcon, ShoppingCartIcon, CreditCardIcon, SettingsIcon } from "lucide-react-native";
 
 type AppRoutes = {
-  signIn: undefined;
   home: undefined;
   sales: undefined;
   cards: undefined;
   services: undefined;
+  signIn: undefined;
 };
 
 export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutes>;
 
 const { Navigator, Screen } = createBottomTabNavigator<AppRoutes>();
 
+const SalesScreen = () => null;
+const CardsScreen = () => null;
+const ServicesScreen = () => null;
+
 export function AppRoutes() {
   return (
     <Navigator
       screenOptions={({ route }) => ({
-        header: () => (route.name === "signIn" ? <HeaderSignIn /> : <Header />),
+        header: () => (route.name === "signIn" && <HeaderSignIn />),
         tabBarActiveTintColor: "#FFD13A",
         tabBarInactiveTintColor: "#a1a1aa",
         tabBarStyle: {
@@ -46,7 +50,6 @@ export function AppRoutes() {
           tabBarButton: () => null,
         }}
       />
-
       <Screen
         name="home"
         component={Home}
@@ -55,28 +58,25 @@ export function AppRoutes() {
           tabBarIcon: ({ color }) => <HomeIcon size={24} color={color} />,
         }}
       />
-
       <Screen
         name="sales"
-        component={() => null}
+        component={SalesScreen}
         options={{
           tabBarLabel: "Vendas",
           tabBarIcon: ({ color }) => <ShoppingCartIcon size={24} color={color} />,
         }}
       />
-
       <Screen
         name="cards"
-        component={() => null}
+        component={CardsScreen}
         options={{
           tabBarLabel: "Cartões",
           tabBarIcon: ({ color }) => <CreditCardIcon size={24} color={color} />,
         }}
       />
-
       <Screen
         name="services"
-        component={() => null}
+        component={ServicesScreen}
         options={{
           tabBarLabel: "Serviços",
           tabBarIcon: ({ color }) => <SettingsIcon size={24} color={color} />,

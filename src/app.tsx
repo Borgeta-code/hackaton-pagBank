@@ -8,7 +8,7 @@ export default function App() {
   return (
     <SafeAreaView className="flex-1 bg-zinc-900">
       <StatusBar
-        barStyle="dark-content"
+        barStyle="light-content"
         backgroundColor="transparent"
         translucent
       />
